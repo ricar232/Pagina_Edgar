@@ -1326,8 +1326,10 @@
       document.querySelectorAll('.before-after-slider').forEach((slider, index) => {
         const handle = slider.querySelector('.slider-handle');
         const afterImage = slider.querySelector('.after-image');
+        const beforeLabel = slider.querySelector('.before-image .image-label');
+        const afterLabel = slider.querySelector('.after-image .image-label');
         
-        if (!handle || !afterImage) {
+        if (!handle || !afterImage || !beforeLabel || !afterLabel) {
           return;
         }
         
@@ -1338,6 +1340,21 @@
           const percentage = Math.max(0, Math.min(100, ((x - rect.left) / rect.width) * 100));
           afterImage.style.clipPath = `inset(0 ${100 - percentage}% 0 0)`;
           handle.style.left = `${percentage}%`;
+          
+          // Simple and clear label logic
+          if (percentage <= 20) {
+            // Slider is left - BEFORE dominates
+            beforeLabel.style.opacity = '1';
+            afterLabel.style.opacity = '0';
+          } else if (percentage >= 80) {
+            // Slider is right - AFTER dominates  
+            beforeLabel.style.opacity = '0';
+            afterLabel.style.opacity = '1';
+          } else {
+            // Middle area - show both
+            beforeLabel.style.opacity = '0.8';
+            afterLabel.style.opacity = '0.8';
+          }
         }
 
         // Initialize with 50% position
